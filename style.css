@@ -1,0 +1,31 @@
+.arc {
+	stroke: #ebccff;
+	stroke-width : 0.5;
+	fill : #b84dff;	
+}
+.arc-expand{
+	opacity : 1;
+}
+.arc-hover{
+	fill : #ebccff;
+}
+.tooltip-show{
+	opacity : 1;
+}
+
+.tooltip{
+	opacity : 0;
+	text-align : left;
+	position : absolute;
+	width : auto;
+	height : auto;
+	font-size : 15px; 
+	color : white;
+	background : #808080;
+	padding : 10px;
+	pointer-events: none;
+}
+body{
+	text-align : center;
+
+}
