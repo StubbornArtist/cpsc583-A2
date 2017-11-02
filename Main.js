@@ -1,6 +1,6 @@
 const MAX_RADIUS = 400;
 const BAND_WIDTH = 50;
-const SEPERATION = 70;
+const SEPERATION = 60;
 
 window.onload = function init(){
 	//TODO: tooltip, titles on chart, color selected, switch dates
@@ -89,7 +89,8 @@ var expandingDonut = function (){
 	this.markSelected = function(){
 		d3.select(container)
 		.selectAll(".arc")
-		.filter(function(d){ return path.indexOf(d.name) != -1; })
+		.filter(function(d){ return (path.indexOf(d.data.name) != -1) 
+		&& (d.data.children.length > 0); })
 		.classed("arc-select", true);
 	}
 	
