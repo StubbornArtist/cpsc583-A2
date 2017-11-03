@@ -3,21 +3,48 @@ const BAND_WIDTH = 50;
 const SEPERATION = 60;
 
 window.onload = function init(){
-	//TODO: tooltip, titles on chart, color selected, switch dates
+	//TODO: titles on chart, switch dates
 	d3.csv("data.csv", function(data){
 		
-		var selectedYear = "1974";
 		var parsedData = parseData(data);
 		
-		var selectedData = parsedData.filter(function(d){ return d.year == selectedYear; })[0];
+		
+		d3.select("#slider")
+		.datum(getDates(data))
+		.call(slider()
+				.height(600)
+				.knobRadius(15)
+				.title("Years"));
 						
 		d3.select("#container")
-		.datum(selectedData.data)
+		.datum(parsedData["1974"])
 		.call(expandingDonut());
-			
+		
+		var tooltip = 
+		d3.select("body")
+		.append("div")
+		.attr("class", "tooltip");
+
+		eventBus.subscribe("arc-mouseover", function(data){			
+			tooltip.style("top", (d3.event.pageY - 28) + "px")
+						.style("left", (d3.event.pageX) + "px")
+						.html("<p><span>Food : " + data.name +
+						"</br>Quantity : " + data.value + " " + data.unit +"</p>")
+						.classed("tooltip-show", true);
+		});
+		
+		eventBus.subscribe("arc-mouseout", function(data){
+			tooltip.classed("tooltip-show", false);
+		});
+		
+		eventBus.subscribe("knob-drag", function(num){
+				d3.select("#container")
+					.datum(parsedData[num])
+					.call(expandingDonut());
+		});
+	
 	});
 }
-
 
 var expandingDonut = function (){
 	var path;
@@ -78,11 +105,13 @@ var expandingDonut = function (){
 			create();
 			markSelected();
 		})
-		.on("mouseover", function(){
+		.on("mouseover", function(d){
 			d3.select(this).classed("arc-hover", true);
+			eventBus.publish("arc-mouseover", d.data);
 		})
-		.on("mouseout", function(){
+		.on("mouseout", function(d){
 			d3.select(this).classed("arc-hover", false);
+			eventBus.publish("arc-mouseout", d.data);
 		});	
 	}
 	
@@ -104,12 +133,11 @@ var expandingDonut = function (){
 }
 
 
-
 function parseData(raw){
 	
 	var dates = raw.columns.filter(function(d){ return !isNaN(d);});
 	var levels = ["desc1", "desc2", "desc3", "desc4"];
-	var years = [];
+	var years = {};
 	dates.forEach(function(date){
 		var data = [];
 		raw.forEach(function(row){
@@ -117,7 +145,7 @@ function parseData(raw){
 			recurse(data, levels, row, (row[date] == '')? 0 : +row[date], 0);
 			
 		});
-		years.push({"year" : date, "data" : data}); 
+		years[date] = data; 
 	
 	});
 	
@@ -147,5 +175,7 @@ function recurse(root, levelLabels, row, value, level){
 }
 
 
-
+function getDates(data){
+	return data.columns.filter(function(d){ return !isNaN(d);});
+}
 

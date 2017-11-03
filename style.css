@@ -1,3 +1,9 @@
+h{
+	font-size : 40px;
+}
+div{
+	margin: 40px;
+}
 .arc {
 	stroke: white;
 	stroke-width : 2.5;
@@ -16,13 +22,29 @@
 }
 
 .arc-hover{
-	fill : #ffd9b3;
+	opacity : 0.5;
 }
 .arc-select{
 	fill: #ff6600;
 }
-.tooltip-show{
-	opacity : 1;
+
+.scale-line{
+	stroke: #808080;
+	stroke-width : 15;
+}
+
+.scale-knob{
+	fill: #ff8c1a;
+	stroke: white;
+	stroke-width : 3;
+}
+
+.scale-title{
+	font-size: 30px;
+}
+
+.scale-text{
+	font-size : 20px;
 }
 
 .tooltip{
@@ -37,7 +59,10 @@
 	padding : 10px;
 	pointer-events: none;
 }
+
+.tooltip-show{
+	opacity : 1;
+}
 body{
 	text-align : center;
-
 }

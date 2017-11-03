@@ -28,6 +28,7 @@ var donut = function(){
 			
 			g.append("path")
 			.attr("d", arc);
+		
 		});
 	}
 	

@@ -1,35 +1,82 @@
 var slider = function (){
 
-	var width;
+	var height;
+	var knobRadius;
+	var knob;
+	var scale;
+	var valueText;
+	var title;
 	
 	function chart(selection){
 		
 		selection.each( function(data){
-			var scale = d3.scaleOrdinal()
-						.range([0, width ])
-						.domain(data);
-						
-						
-			var line = d3.select(this)
+			
+				scale = d3.scaleQuantize()
+						.range(data)
+						.domain([0, height]);
+					
+				d3.select(this)
 						.append("line")
-						.attr("width", width)
+						.attr("x1", 0)
+						.attr("x2", 0)
+						.attr("y1", 0)
+						.attr("y2", height)
 						.attr("class", "scale-line");
 						
-			line.selectAll(".label")
-				.data(data)
-				.enter()
-				.append("g")
-				.attr("transform", function(d){ return "translate (" +  scale(d) + ", 0 )";})
-				.attr("class", "label")
+				knob = d3.select(this).append("circle")
+						.attr("cx", 0)
+						.attr("cy", 0)
+						.attr("r", knobRadius)
+						.attr("class", "scale-knob")
+						.call(d3.drag()
+						.on("start drag", slide));
+						
+				valueText =	d3.select(this).append("text")
+							.attr("dx", 50)
+							.attr("dy", 0)
+							.attr("class", "scale-text")
+							.text(scale(knob.attr("cy")));
+							
+				d3.select(this)
 				.append("text")
-				.text("Hi");
+				.attr("dy", -50)
+				.attr("dx", -5)
+				.attr("class", "scale-title")
+				.text(title);
 				
 		});
 	}
 	
-	chart.width = function(value){
-		if(!arguments.length) return width;
-		width = value;
+	
+	function slide(){
+		if(d3.event.y < (height - (knobRadius/2)) && d3.event.y > (knobRadius/2)){
+			
+			knob.attr("cy", d3.event.y);
+			
+			var val = scale(knob.attr("cy"));
+			valueText.attr("dy", d3.event.y)
+			.text(val);
+			
+			eventBus.publish("knob-drag", val);
+		}
+	}
+	
+	chart.height = function(value){
+		if(!arguments.length) return height;
+		height = value;
+		return this;
+	}
+	
+	chart.knobRadius = function(value){
+		if(!arguments.length) return knobRadius;
+		knobRadius = value;
+		return this;
+		
+	}
+	
+	chart.title = function(value){
+		if(!arguments.length) return title;
+		title = value;
 		return this;
 	}
 			
