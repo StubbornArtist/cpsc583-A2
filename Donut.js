@@ -1,3 +1,5 @@
+const MAX_LABEL_WIDTH = 15;
+
 var donut = function(){
 	
 	var bandWidth;
@@ -28,6 +30,24 @@ var donut = function(){
 			
 			g.append("path")
 			.attr("d", arc);
+			
+			g.append("text")
+			.attr("transform", function(d){ return "translate(" + arc.centroid(d) + ")"
+			 +"rotate(" + angle(d) + ")";})
+			.attr("class", "arc-label")
+			.text(function(d){ return label(d.data.name); });
+			
+		
+			/*g.append("g")
+			.attr("transform", function(d){ return "translate(" + pos(d, arc) + ")";})
+			.append("foreignObject")
+			.attr("width", 	MAX_LABEL_WIDTH)
+			.attr("height", MAX_LABEL_WIDTH)
+			.append("xhtml:body")
+			.append("p")
+			.attr("class", "arc-label")
+			.text(function(d){return d.data.name;});
+			*/
 		
 		});
 	}
@@ -60,6 +80,30 @@ var donut = function(){
 		
 		classes = value;
 		return this;
+	}
+	
+	function angle(d){
+		var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+		return a > 90 ? a - 180 : a;
+	}
+	
+	function pos(d, arc){
+		var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+		var c = arc.centroid(d);
+		if(a > 180){
+			c[0] = c[0] - MAX_LABEL_WIDTH;
+			if( a < 270){
+				c[1] = c[1] - MAX_LABEL_WIDTH;
+			}
+		}
+		return c;
+	}
+	
+	function label(text){
+		if(text.length > MAX_LABEL_WIDTH){
+				return text.slice(0, MAX_LABEL_WIDTH - 3) + "...";
+		}
+		return text;
 	}
 	
 	return chart;

@@ -20,7 +20,7 @@ var layeredDonut = function(){
 				.call(donut()
 						.radius(radius)
 						.bandWidth(bandWidth)
-						.value(function(d){ return d.value;})
+						.value(function(d){ return d.value + 50;})
 						.classes("arc arc-level" + level ));	
 	}
 	
