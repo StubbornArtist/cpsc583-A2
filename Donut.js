@@ -31,24 +31,6 @@ var donut = function(){
 			g.append("path")
 			.attr("d", arc);
 			
-			g.append("text")
-			.attr("transform", function(d){ return "translate(" + arc.centroid(d) + ")"
-			 +"rotate(" + angle(d) + ")";})
-			.attr("class", "arc-label")
-			.text(function(d){ return label(d.data.name); });
-			
-		
-			/*g.append("g")
-			.attr("transform", function(d){ return "translate(" + pos(d, arc) + ")";})
-			.append("foreignObject")
-			.attr("width", 	MAX_LABEL_WIDTH)
-			.attr("height", MAX_LABEL_WIDTH)
-			.append("xhtml:body")
-			.append("p")
-			.attr("class", "arc-label")
-			.text(function(d){return d.data.name;});
-			*/
-		
 		});
 	}
 	
